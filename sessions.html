@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Sessions</title>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r shadow-md">
+      <div class="p-4">
+        <img src="https://via.placeholder.com/150" alt="Logo" class="mx-auto mb-4 rounded-md">
+      </div>
+      <nav>
+        <ul class="space-y-4">
+            <li><a href="contact.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contacts</a></li>
+          
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Inscription</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Marketing & Web</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contenu de l'événement</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Agenda</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Header -->
+      <header class="flex items-center justify-between pb-4 border-b">
+        <h1 class="text-xl font-semibold">Sessions</h1>
+        <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+          Nouvelle Session
+        </button>
+      </header>
+
+      <!-- Search Bar -->
+      <div class="mt-6">
+        <input
+          type="text"
+          placeholder="Rechercher une session"
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+        />
+      </div>
+
+      <!-- Table -->
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full bg-white border rounded-md shadow">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="px-4 py-2 text-left">Date & Heure</th>
+              <th class="px-4 py-2 text-left">Titre de la Session</th>
+              <th class="px-4 py-2 text-left">Virtuel</th>
+              <th class="px-4 py-2 text-left">Accès</th>
+              <th class="px-4 py-2 text-left">Visibilité</th>
+              <th class="px-4 py-2 text-left">Inscrits</th>
+              <th class="px-4 py-2 text-left">État</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Table content will be dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal -->
+      <div id="newSessionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow p-6 m-4 max-w-xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Créer une Nouvelle Session</h2>
+            <button onclick="toggleModal()" class="text-gray-500 hover:text-gray-700">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form id="sessionForm" onsubmit="handleSubmit(event)" class="space-y-4">
+            <div>
+              <label class="block text-gray-700 mb-2">Titre de la Session</label>
+              <input type="text" name="title" required class="w-full px-3 py-2 border rounded-md">
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Date</label>
+              <input type="date" name="date" required class="w-full px-3 py-2 border rounded-md">
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Heure</label>
+              <input type="time" name="time" required class="w-full px-3 py-2 border rounded-md">
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Session Virtuelle</label>
+              <select name="isVirtual" class="w-full px-3 py-2 border rounded-md">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Accès</label>
+              <select name="access" class="w-full px-3 py-2 border rounded-md">
+                <option value="Public">Public</option>
+                <option value="Privé">Privé</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Visibilité</label>
+              <select name="visibility" class="w-full px-3 py-2 border rounded-md">
+                <option value="Visible">Visible</option>
+                <option value="Caché">Caché</option>
+              </select>
+            </div>
+            <div class="flex justify-end space-x-4 mt-6">
+              <button type="button" onclick="toggleModal()" class="px-4 py-2 text-gray-600 border rounded-md hover:bg-gray-100">
+                Annuler
+              </button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Créer la Session
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // State management
+    let sessions = [];
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSessions();
+        initializeEventListeners();
+    });
+
+    // Load sessions from localStorage
+    function loadSessions() {
+        sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+        renderSessions();
+    }
+
+    // Save sessions to localStorage
+    function saveSessions() {
+        localStorage.setItem('sessions', JSON.stringify(sessions));
+    }
+
+    // Render sessions in the table
+    function renderSessions() {
+        const tbody = document.querySelector('tbody');
+        if (sessions.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="px-4 py-2 text-center border">Aucune session disponible</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = sessions.map((session, index) => `
+            <tr>
+                <td class="px-4 py-2 border">${session.date} ${session.time}</td>
+                <td class="px-4 py-2 border">${session.title}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full ${session.isVirtual ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                        ${session.isVirtual ? 'Oui' : 'Non'}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">${session.access}</td>
+                <td class="px-4 py-2 border">${session.visibility}</td>
+                <td class="px-4 py-2 border">${session.registrants}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full ${getStatusStyle(session.status)}">
+                        ${session.status}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">
+                    <button onclick="editSession(${index})" class="text-blue-500 hover:underline mr-2">Modifier</button>
+                    <button onclick="deleteSession(${index})" class="text-red-500 hover:underline">Supprimer</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Toggle modal visibility
+    function toggleModal() {
+        const modal = document.getElementById('newSessionModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+    }
+
+    // Handle form submission
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        const sessionData = {
+            title: formData.get('title'),
+            date: formData.get('date'),
+            time: formData.get('time'),
+            isVirtual: formData.get('isVirtual') === 'true',
+            access: formData.get('access'),
+            visibility: formData.get('visibility'),
+            registrants: 0,
+            status: 'Publié'
+        };
+
+        createSession(sessionData);
+        toggleModal();
+        form.reset();
+    }
+
+    // Create new session
+    function createSession(sessionData) {
+        sessions.push(sessionData);
+        saveSessions();
+        renderSessions();
+    }
+
+    // Delete session
+    function deleteSession(index) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette session ?')) {
+            sessions.splice(index, 1);
+            saveSessions();
+            renderSessions();
+        }
+    }
+
+    // Edit session
+    function editSession(index) {
+        // Implement edit modal logic
+        console.log('Editing session:', sessions[index]);
+    }
+
+    // Show new session modal
+    function showNewSessionModal() {
+        toggleModal();
+    }
+
+    // Initialize event listeners
+    function initializeEventListeners() {
+        // Search functionality
+        document.querySelector('input[type="text"]').addEventListener('input', handleSearch);
+        
+        // New session button
+        document.querySelector('button.bg-blue-500').addEventListener('click', showNewSessionModal);
+    }
+
+    // Handle search
+    function handleSearch(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredSessions = sessions.filter(session => 
+            session.title.toLowerCase().includes(searchTerm)
+        );
+        renderFilteredSessions(filteredSessions);
+    }
+
+    // Render filtered sessions
+    function renderFilteredSessions(filteredSessions) {
+        const tbody = document.querySelector('tbody');
+        if (filteredSessions.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="px-4 py-2 text-center border">Aucune session trouvée</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = filteredSessions.map((session, index) => `
+            <tr>
+                <td class="px-4 py-2 border">${session.date} ${session.time}</td>
+                <td class="px-4 py-2 border">${session.title}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full ${session.isVirtual ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                        ${session.isVirtual ? 'Oui' : 'Non'}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">${session.access}</td>
+                <td class="px-4 py-2 border">${session.visibility}</td>
+                <td class="px-4 py-2 border">${session.registrants}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full ${getStatusStyle(session.status)}">
+                        ${session.status}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">
+                    <button onclick="editSession(${index})" class="text-blue-500 hover:underline mr-2">Modifier</button>
+                    <button onclick="deleteSession(${index})" class="text-red-500 hover:underline">Supprimer</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Get status style
+    function getStatusStyle(status) {
+        switch(status.toLowerCase()) {
+            case 'publié': return 'bg-green-100 text-green-800';
+            case 'brouillon': return 'bg-gray-100 text-gray-800';
+            case 'annulé': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    }
+
+    // Sample data initialization (remove in production)
+    if (!localStorage.getItem('sessions')) {
+        const sampleSessions = [
+            {
+                date: '2024-01-20',
+                time: '14:00',
+                title: 'Introduction à JavaScript',
+                isVirtual: true,
+                access: 'Public',
+                visibility: 'Visible',
+                registrants: 12,
+                status: 'Publié'
+            }
+        ];
+        localStorage.setItem('sessions', JSON.stringify(sampleSessions));
+    }
+  </script>
+</body>
+</html>

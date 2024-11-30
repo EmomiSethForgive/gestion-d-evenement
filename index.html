@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Événements près de chez vous</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./main.js" defer></script>
+    <style>
+        .event-card {
+            transition: transform 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-12">
+        <div class="mt-1 flex space-x-4 justify-end mb-4">
+            <button onclick="window.location.href='login.html'" class="bg-blue-500 text-white text-xs px-2 py-2 rounded-lg hover:bg-blue-600 transition">
+                Se connecter
+            </button>
+            <button onclick="window.location.href='register.html'" class="border border-blue-500 text-xs text-blue-500 px-2 py-2 rounded-lg hover:bg-gray-50 transition">
+                S'inscrire
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <div>
+                <h1 class="text-4xl font-bold mb-4">Explorez les Meilleurs Événements près de Chez Vous</h1>
+                <p class="text-gray-600 mb-6">Découvrez une sélection d'événements captivants dans votre région en ce moment. Que vous cherchiez un concert, une conférence ou une soirée innovante, notre plateforme vous aide à trouver l'événement parfait.</p>
+                <div class="flex space-x-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                        Découvrez nos Événements
+                    </button>
+                    <button onclick="checkAuthAndRedirect()" class="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+                        Créer un Événement
+                    </button>
+                </div>
+                
+            </div>
+            <div class="hidden md:block">
+                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865" alt="Événements" class="rounded-lg shadow-lg w-full h-auto">
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Events Section -->
+    <section id="events" class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold mb-8">Nos Événements les Plus Populaires</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden event-card">
+                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205" alt="Atelier" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Atelier de Peinture</h3>
+                    <p class="text-gray-600">Explorez votre créativité lors de cet atelier de peinture convivial où vous apprendrez diverses techniques.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden event-card">
+                <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3" alt="Concert" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Concert de Rock</h3>
+                    <p class="text-gray-600">Vivez un rythme des meilleurs groupes de rock lors de cette soirée.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden event-card">
+                <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678" alt="Conférence" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Conférence Innovante</h3>
+                    <p class="text-gray-600">Venez vous immerger dans des sujets passionnants lors de nos conférences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold mb-8">Événements à Venir</h2>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl font-bold text-blue-500">1</span>
+                    <div>
+                        <h3 class="text-xl font-bold">Soirée Jeux de Société</h3>
+                        <p class="text-gray-600">Rejoignez-nous pour une soirée conviviale autour de jeux de société.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl font-bold text-blue-500">2</span>
+                    <div>
+                        <h3 class="text-xl font-bold">Randonnée en Montagne</h3>
+                        <p class="text-gray-600">Explorez les sentiers panoramiques de nos montagnes.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl font-bold text-blue-500">3</span>
+                    <div>
+                        <h3 class="text-xl font-bold">Atelier de Cuisine Végétarienne</h3>
+                        <p class="text-gray-600">Découvrez des recettes créatives végétariennes savoureuses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8">Rejoignez notre Communauté d'Événements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <h3 class="font-bold mb-2">Mes Événements</h3>
+                    <p class="text-gray-600">Gérez facilement tous vos événements préférés en une boutique.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-bold mb-2">Notifications</h3>
+                    <p class="text-gray-600">Soyez au courant des nouveaux événements.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-bold mb-2">Commentaires</h3>
+                    <p class="text-gray-600">Partagez vos impressions avec d'autres participants.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-bold mb-2">Profil Personnalisé</h3>
+                    <p class="text-gray-600">Créez un profil pour découvrir des événements faits pour vous.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ratings Section -->
+    <section class="bg-blue-500 py-12 text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Nos Événements les Mieux Notés</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">4.8</div>
+                    <p>Soirée Musique Acoustique</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">4.7</div>
+                    <p>Atelier de Photographie</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">4.6</div>
+                    <p>Conférence sur le Bien-être</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">4.5</div>
+                    <p>Tournoi de Jeux Vidéo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Events Section -->
+    <section class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold mb-8">Événements Tendance</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <h3 class="font-bold mb-2">Concerts</h3>
+                <p class="text-gray-600">Vivez au rythme de vos artistes préférés.</p>
+            </div>
+            <div class="text-center">
+                <h3 class="font-bold mb-2">Ateliers Créatifs</h3>
+                <p class="text-gray-600">Exprimez votre créativité lors d'ateliers passionnants.</p>
+            </div>
+            <div class="text-center">
+                <h3 class="font-bold mb-2">Conférences</h3>
+                <p class="text-gray-600">Nourrissez votre esprit lors de discussions enrichissantes.</p>
+            </div>
+            <div class="text-center">
+                <h3 class="font-bold mb-2">Activités Ludiques</h3>
+                <p class="text-gray-600">Amusez-vous lors de nos événements participatifs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold mb-8">Explorez notre Sélection d'Événements</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3" alt="Event 1" class="w-full h-48 object-cover rounded-lg">
+            <img src="https://images.unsplash.com/photo-1511578314322-379afb476865" alt="Event 2" class="w-full h-48 object-cover rounded-lg">
+            <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678" alt="Event 3" class="w-full h-48 object-cover rounded-lg">
+            <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205" alt="Event 4" class="w-full h-48 object-cover rounded-lg">
+        </div>
+        <p class="text-center text-gray-600 mt-8">Découvrez une variété d'événements passionnants dans votre région en ce temps. Que vous soyez à la recherche d'un concert, d'une conférence ou d'une activité créative, notre plateforme vous aide à trouver l'événement parfait.</p>
+    </section>
+<!-- Modal de modification -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow p-6 m-4 max-w-xl w-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Modifier la Session</h2>
+            <button onclick="toggleEditModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="editForm" class="space-y-4">
+            <input type="hidden" id="editSessionIndex" name="editSessionIndex">
+            <div>
+                <label for="editEventName" class="text-gray-600 block mb-2">Nom de la Session :</label>
+                <input type="text" id="editEventName" name="editEventName" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="editEventDate" class="text-gray-600 block mb-2">Date :</label>
+                <input type="date" id="editEventDate" name="editEventDate" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="editEventTime" class="text-gray-600 block mb-2">Heure :</label>
+                <input type="time" id="editEventTime" name="editEventTime" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="editEventLocation" class="text-gray-600 block mb-2">Lieu :</label>
+                <input type="text" id="editEventLocation" name="editEventLocation" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="editEventType" class="text-gray-600 block mb-2">Type :</label>
+                <select id="editEventType" name="editEventType" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="conference">Conférence</option>
+                    <option value="workshop">Atelier</option>
+                    <option value="webinar">Webinaire</option>
+                </select>
+            </div>
+            <div>
+                <label for="editEventDescription" class="text-gray-600 block mb-2">Description :</label>
+                <textarea id="editEventDescription" name="editEventDescription" required
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"></textarea>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" onclick="toggleEditModal()" 
+                    class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    Annuler
+                </button>
+                <button type="submit" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </div>
+</div><td class="py-4 px-6 text-center relative">
+    <button class="text-gray-400 hover:text-gray-600" onclick="handleSessionSettings(${index})">
+        <i class="fas fa-cog"></i>
+    </button>
+    <div id="settingsMenu${index}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+        <div class="py-1">
+            <button onclick="editSession(${index})" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="fas fa-edit mr-2"></i>Modifier
+            </button>
+            <button onclick="deleteSession(${index})" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                <i class="fas fa-trash-alt mr-2"></i>Supprimer
+            </button>
+        </div>
+    </div>
+</td>
+
+    <script>
+        // Gérer les paramètres d'une session
+function handleSessionSettings(sessionId) {
+    // Fermer tous les autres menus
+    document.querySelectorAll('[id^="settingsMenu"]').forEach(menu => {
+        if (menu.id !== `settingsMenu${sessionId}`) {
+            menu.classList.add('hidden');
+        }
+    });
+
+    // Basculer le menu actuel
+    const menu = document.getElementById(`settingsMenu${sessionId}`);
+    menu.classList.toggle('hidden');
+
+    // Fermer le menu si on clique ailleurs
+    document.addEventListener('click', function closeMenu(e) {
+        if (!e.target.closest(`#settingsMenu${sessionId}`) && 
+            !e.target.closest(`button[onclick="handleSessionSettings(${sessionId})"]`)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', closeMenu);
+        }
+    });
+}
+
+// Modifier une session
+function editSession(index) {
+    const events = JSON.parse(localStorage.getItem('events') || '[]');
+    const event = events[index];
+    
+    // Remplir le formulaire avec les données de l'événement
+    document.getElementById('editSessionIndex').value = index;
+    document.getElementById('editEventName').value = event.name;
+    document.getElementById('editEventDate').value = event.date;
+    document.getElementById('editEventTime').value = event.time;
+    document.getElementById('editEventLocation').value = event.location;
+    document.getElementById('editEventType').value = event.type;
+    document.getElementById('editEventDescription').value = event.description;
+
+    // Afficher le modal
+    toggleEditModal();
+}
+
+// Supprimer une session
+function deleteSession(index) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette session ?')) {
+        const events = JSON.parse(localStorage.getItem('events') || '[]');
+        events.splice(index, 1);
+        localStorage.setItem('events', JSON.stringify(events));
+        loadSessions();
+        alert('Session supprimée avec succès !');
+    }
+}
+
+// Gérer le modal de modification
+function toggleEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+    modal.classList.toggle('flex');
+    document.body.style.overflow = modal.classList.contains('hidden') ? '' : 'hidden';
+}
+
+// Gérer la soumission du formulaire de modification
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const index = document.getElementById('editSessionIndex').value;
+    const events = JSON.parse(localStorage.getItem('events') || '[]');
+    
+    const updatedEvent = {
+        ...events[index],
+        name: document.getElementById('editEventName').value,
+        date: document.getElementById('editEventDate').value,
+        time: document.getElementById('editEventTime').value,
+        location: document.getElementById('editEventLocation').value,
+        type: document.getElementById('editEventType').value,
+        description: document.getElementById('editEventDescription').value
+    };
+
+    events[index] = updatedEvent;
+    localStorage.setItem('events', JSON.stringify(events));
+
+    toggleEditModal();
+    loadSessions();
+    alert('Session modifiée avec succès !');
+});
+
+// Fermer le modal de modification si on clique en dehors
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleEditModal();
+    }
+});
+
+// Fermer le modal de modification avec la touche Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !document.getElementById('editModal').classList.contains('hidden')) {
+        toggleEditModal();
+    }
+});
+        function checkAuthAndRedirect() {
+            // Vérifier si l'utilisateur est connecté (à implémenter avec votre système d'authentification)
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn) {
+                // Si connecté, rediriger vers la page sessions
+                window.location.href = 'sessions.html';
+            } else {
+                // Si non connecté, rediriger vers la page de connexion
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

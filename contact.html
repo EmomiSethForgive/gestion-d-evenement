@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Contacts</title>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r shadow-md">
+      <div class="p-4">
+        <img src="https://via.placeholder.com/150" alt="Logo" class="mx-auto mb-4 rounded-md">
+      </div>
+      <nav>
+        <ul class="space-y-4">
+          <li><a href="contact.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contacts</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Inscription</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Marketing & Web</a></li>
+          <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contenu de l'événement</a></li>
+          <li><a href="sessions.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Sessions</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Header -->
+      <header class="flex items-center justify-between pb-4 border-b">
+        <h1 class="text-xl font-semibold">Contacts</h1>
+        <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+          Nouveau Contact
+        </button>
+      </header>
+
+      <!-- Search Bar -->
+      <div class="mt-6">
+        <input
+          type="text"
+          placeholder="Rechercher un contact"
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+        />
+      </div>
+
+      <!-- Table -->
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full bg-white border rounded-md shadow">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="px-4 py-2 text-left">Nom</th>
+              <th class="px-4 py-2 text-left">Email</th>
+              <th class="px-4 py-2 text-left">Téléphone</th>
+              <th class="px-4 py-2 text-left">Entreprise</th>
+              <th class="px-4 py-2 text-left">Statut</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Table content will be dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // State management
+    let contacts = [];
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadContacts();
+        initializeEventListeners();
+    });
+
+    // Load contacts from localStorage
+    function loadContacts() {
+        contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+        renderContacts();
+    }
+
+    // Save contacts to localStorage
+    function saveContacts() {
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+
+    // Render contacts in the table
+    function renderContacts() {
+        const tbody = document.querySelector('tbody');
+        if (contacts.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="px-4 py-2 text-center border">Aucun contact disponible</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = contacts.map((contact, index) => `
+            <tr>
+                <td class="px-4 py-2 border">${contact.name}</td>
+                <td class="px-4 py-2 border">${contact.email}</td>
+                <td class="px-4 py-2 border">${contact.phone}</td>
+                <td class="px-4 py-2 border">${contact.company}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                        ${contact.status}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">
+                    <button class="text-blue-500 hover:underline mr-2">Modifier</button>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Initialize event listeners
+    function initializeEventListeners() {
+        // Search functionality
+        document.querySelector('input[type="text"]').addEventListener('input', handleSearch);
+    }
+
+    // Handle search
+    function handleSearch(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredContacts = contacts.filter(contact => 
+            contact.name.toLowerCase().includes(searchTerm) ||
+            contact.email.toLowerCase().includes(searchTerm) ||
+            contact.company.toLowerCase().includes(searchTerm)
+        );
+        renderFilteredContacts(filteredContacts);
+    }
+
+    // Render filtered contacts
+    function renderFilteredContacts(filteredContacts) {
+        const tbody = document.querySelector('tbody');
+        if (filteredContacts.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="px-4 py-2 text-center border">Aucun contact trouvé</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = filteredContacts.map((contact, index) => `
+            <tr>
+                <td class="px-4 py-2 border">${contact.name}</td>
+                <td class="px-4 py-2 border">${contact.email}</td>
+                <td class="px-4 py-2 border">${contact.phone}</td>
+                <td class="px-4 py-2 border">${contact.company}</td>
+                <td class="px-4 py-2 border">
+                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                        ${contact.status}
+                    </span>
+                </td>
+                <td class="px-4 py-2 border">
+                    <button class="text-blue-500 hover:underline mr-2">Modifier</button>
+                    <button class="text-red-500 hover:underline">Supprimer</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Sample data initialization (remove in production)
+    if (!localStorage.getItem('contacts')) {
+        const sampleContacts = [
+            {
+                name: 'Jean Dupont',
+                email: 'jean.dupont@example.com',
+                phone: '0123456789',
+                company: 'Tech Corp',
+                status: 'Actif'
+            }
+        ];
+        localStorage.setItem('contacts', JSON.stringify(sampleContacts));
+    }
+  </script>
+</body>
+</html>
